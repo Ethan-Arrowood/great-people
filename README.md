@@ -1,3 +1,15 @@
+# Green Monster
+
+Requires Node.js
+
+Bootstrapped from create-react-app
+
+Get started with:
+
+```
+npm install
+npm run start
+```
 
 # Contributing
 
