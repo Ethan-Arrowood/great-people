@@ -1,7 +1,7 @@
 {
   "name": "api",
   "version": "0.1.0",
-  "description": "green-monster api",
+  "description": "great-people api",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",

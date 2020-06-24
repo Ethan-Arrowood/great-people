@@ -1,4 +1,4 @@
-# Green Monster
+# Great People
 
 Requires Node.js
 
