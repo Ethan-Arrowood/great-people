@@ -9,7 +9,9 @@
     "start": "func start",
     "test": "echo \"No tests yet...\""
   },
-  "dependencies": {},
+  "dependencies": {
+    "@azure/storage-blob": "^12.1.2"
+  },
   "devDependencies": {
     "@azure/functions": "^1.2.2",
     "typescript": "^3.3.3"
