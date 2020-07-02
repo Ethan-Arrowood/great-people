@@ -7,15 +7,15 @@
       "direction": "in",
       "route": "profile/{userId:alpha}",
       "methods": [
-        "get"
+        "post"
       ]
     },
     {
       "name": "userInfo",
       "type": "blob",
-      "path": "profiles/{userId}.json",
+      "path": "profiles/{UserId}.json",
       "connection": "STORAGE_CONNECTION_STRING",
-      "direction": "in"
+      "direction": "out"
     },
     {
       "name": "res",
@@ -23,5 +23,5 @@
       "direction": "out"
     }
   ],
-  "scriptFile": "../dist/getProfile/index.js"
+  "scriptFile": "../dist/postProfile/index.js"
 }

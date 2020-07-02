@@ -2,20 +2,20 @@ import { AzureFunction, Context, HttpRequest } from "@azure/functions"
 import { UserInfo } from "../models/UserInfo";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
-    const userId = req.params.userId;
-    const userInfo: UserInfo = <UserInfo>(context.bindings.userInfo);
+    const userInfo: UserInfo = <UserInfo>context.req?.body;
 
-    context.log.info(`getProfile called for ${userId}`)
-    if (userId && userInfo) {
+    if (userInfo && userInfo.userId == context.req?.params.userId) {
+        context.bindings.userInfo = userInfo;
+
         context.res = {
             // status: 200, /* Defaults to 200 */
-            body: userInfo
+            body: `Saved profile for ${userInfo.userId}`
         };
     }
     else {
         context.res = {
             status: 400,
-            body: "Oops I didn't catch your userId"
+            body: "Invalid user info"
         };
     }
 };
