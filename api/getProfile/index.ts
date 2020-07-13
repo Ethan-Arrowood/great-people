@@ -3,7 +3,7 @@ import { UserInfo } from "../models/UserInfo";
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     const userId = req.params.userId;
-    const userInfo: UserInfo = <UserInfo>(context.bindings.userInfo);
+    const userInfo = context.bindings.userInfo as UserInfo
 
     context.log.info(`getProfile called for ${userId}`)
     if (userId && userInfo) {
