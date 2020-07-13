@@ -1,4 +1,3 @@
-import { userInfo } from "os"
 
 export interface UserInfo {
     userId: string;
