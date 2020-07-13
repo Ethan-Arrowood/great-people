@@ -1,0 +1,91 @@
+name: Azure Static Site with FD, Fn, and Blob CI/CD
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - master
+
+env:
+  NODE_VERSION: '12.x'                     # set this to the node version to use (supports 8.x, 10.x, 12.x)
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './api'      # set this to the path to your web app project, defaults to the repository root
+  AZURE_REACT_PACKAGE_PATH: './src'      # set this to the path to your web app project, defaults to the repository root
+
+jobs:
+  build_and_deploy_job:
+      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+      runs-on: ubuntu-latest
+      name: Build and Deploy Job
+      steps:
+        - name: Azure Login
+          uses: azure/login@v1
+          with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+        - name: Checkout Source:
+          uses: actions/checkout@v2
+            with:
+              submodules: true
+
+        - name: Lint Code
+          uses: docker://github/super-linter:v3
+          env:
+            VALIDATE_ALL_CODEBASE: true
+
+        - name: Setup Node ${{ env.NODE_VERSION }} Environment
+          uses: actions/setup-node@v1
+          with:
+            node-version: ${{ env.NODE_VERSION }}
+
+        - name: Build and Test React App
+          shell: bash
+          run: |
+            pushd './${{ env.AZURE_REACT_PACKAGE_PATH }}'
+            npm install
+            npm run build --if-present
+            npm run test --if-present
+            popd
+
+        - name: Build and Test Function App
+          shell: bash
+          run: |
+            pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+            npm install
+            npm run build --if-present
+            npm run test --if-present
+            popd
+
+        - name: "Terraform Init"
+            uses: hashicorp/terraform-github-actions@master
+            with:
+              tf_actions_version: 0.12.13
+              tf_actions_subcommand: "init"
+  
+          - name: "Terraform Plan"
+            uses: hashicorp/terraform-github-actions@master
+            with:
+              tf_actions_version: 0.12.13
+              tf_actions_subcommand: "plan"
+              args: '-var="client_secret=${{ secrets.clientSecret }}"'
+          
+          - name: "Terraform Apply"
+            uses: hashicorp/terraform-github-actions@master
+            with:
+                tf_actions_version: 0.12.13
+              tf_actions_subcommand: "apply"
+                  args: '-var="client_secret=${{ secrets.clientSecret }}"'
+
+        - name: Deploy Azure Function
+          uses: Azure/functions-action@v1
+          with:
+            app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+            package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+
+        - name: Deploy Static Site
+          uses: Azure/CLI
+          run: |
+            az storage blob upload-batch --account-name ${{ env.AZURE_STORAGE_NAME }} -s ./build -d '$web'
+
