@@ -57,11 +57,17 @@ resource "azurerm_storage_account" "static_site" {
   }
 }
 
+resource "azurerm_storage_container" "static_site" {
+  name                  = "profiles"
+  storage_account_name  = azurerm_storage_account.static_site.name
+  container_access_type = "private"
+}
+
 resource "azurerm_app_service_plan" "static_site" {
   name                = "${local.prefix}-app-service-plan"
   location            = var.location
   resource_group_name = azurerm_resource_group.static_site.name
-  kind                = "Linux"
+  kind                = "FunctionApp"
   reserved            = true
 
   sku {

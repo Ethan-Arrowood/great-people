@@ -14,7 +14,7 @@
       "name": "userInfo",
       "type": "blob",
       "path": "profiles/{userId}.json",
-      "connection": "STORAGE_CONNECTION_STRING",
+      "connection": "AzureWebJobsStorage",
       "direction": "in"
     },
     {
