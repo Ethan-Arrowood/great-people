@@ -14,6 +14,7 @@
       "name": "userInfo",
       "type": "blob",
       "path": "profiles/{userId}.json",
+      "connection": "PROFILES_STORAGE_CONNECTION",
       "direction": "in"
     },
     {
