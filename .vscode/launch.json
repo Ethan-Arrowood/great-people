@@ -2,11 +2,26 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Attach to Node Functions",
+            "name": "Attach to Functions",
             "type": "node",
             "request": "attach",
             "port": 9229,
-            "preLaunchTask": "func: host start"
+            "preLaunchTask": "func: host start",
+            "cwd": "${workspaceFolder}/api"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:3000",
+            "preLaunchTask": "App: npm run start",
+            "webRoot": "${workspaceFolder}/build"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Client and Server",
+            "configurations": ["Attach to Functions", "Launch Chrome against localhost"]
         }
     ]
 }
