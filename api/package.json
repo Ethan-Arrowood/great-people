@@ -7,11 +7,14 @@
     "watch": "tsc -w",
     "prestart": "npm run build",
     "start": "func start",
-    "test": "echo \"No tests yet...\""
+    "test": "jest --testRegex \"\\.test\\.ts$\""
   },
   "dependencies": {},
   "devDependencies": {
     "@azure/functions": "^1.2.2",
+    "@types/jest": "^26.0.3",
+    "jest": "^26.1.0",
+    "ts-jest": "^26.1.1",
     "typescript": "^3.3.3"
   }
 }
