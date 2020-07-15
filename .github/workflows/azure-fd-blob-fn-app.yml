@@ -103,6 +103,6 @@ jobs:
             package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
         - name: Deploy Static Site Content
-          uses: Azure/CLI
+          uses: Azure/CLI@v1
           with:
             inlineScript: az storage blob upload-batch --account-name ${{ env.AZURE_STORAGE_NAME }} -s ./build -d '$web'
