@@ -13,6 +13,8 @@ env:
   NODE_VERSION: '12.x'                     # set this to the node version to use (supports 8.x, 10.x, 12.x)
   AZURE_FUNCTIONAPP_PACKAGE_PATH: './api'      # set this to the path to your web app project, defaults to the repository root
   AZURE_REACT_PACKAGE_PATH: './src'      # set this to the path to your web app project, defaults to the repository root
+  TF_PATH: './deploy'      # set this to the path to your web app project, defaults to the repository root
+  ENVIRONMENT: ''
 
 jobs:
   build_and_deploy_job:
@@ -25,7 +27,7 @@ jobs:
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-        - name: Checkout Source:
+        - name: Checkout Source
           uses: actions/checkout@v2
             with:
               submodules: true
@@ -58,33 +60,47 @@ jobs:
             npm run test --if-present
             popd
 
-        - name: "Terraform Init"
-            uses: hashicorp/terraform-github-actions@master
-            with:
-              tf_actions_version: 0.12.13
-              tf_actions_subcommand: "init"
-  
-          - name: "Terraform Plan"
-            uses: hashicorp/terraform-github-actions@master
-            with:
-              tf_actions_version: 0.12.13
-              tf_actions_subcommand: "plan"
-              args: '-var="client_secret=${{ secrets.clientSecret }}"'
-          
-          - name: "Terraform Apply"
-            uses: hashicorp/terraform-github-actions@master
-            with:
-                tf_actions_version: 0.12.13
-              tf_actions_subcommand: "apply"
-                  args: '-var="client_secret=${{ secrets.clientSecret }}"'
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v1
+
+        - name: Terraform Init
+          run: |
+            pushd './${{ env.TF_PATH }}'
+            terraform init
+            popd
+
+        - name: Terraform Format
+          run: |
+            pushd './${{ env.TF_PATH }}'
+            terraform fmt -check
+            popd
+
+        - name: Terraform Plan
+          run: |
+            pushd './${{ env.TF_PATH }}'
+            terraform plan \
+            -var="app_name=${{ secrets.app_name }}" \
+            -var="location=${{ secrets.location }}" \
+            -var="environment=${{ env.GITHUB_RUN_ID }}"
+            popd
+
+        - name: Terraform Apply
+          if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+          run: |
+            pushd './${{ env.TF_PATH }}'
+            terraform apply -auto-approve \
+            -var="app_name=${{ secrets.app_name }}" \
+            -var="location=${{ secrets.location }}" \
+            -var="environment=${{ env.GITHUB_RUN_ID }}"
+            popd
 
         - name: Deploy Azure Function
           uses: Azure/functions-action@v1
           with:
-            app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+            app-name: ${{ secret.AZURE_FUNCTIONAPP_NAME }}
             package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
-        - name: Deploy Static Site
+        - name: Deploy Static Site Content
           uses: Azure/CLI
           run: |
             az storage blob upload-batch --account-name ${{ env.AZURE_STORAGE_NAME }} -s ./build -d '$web'
