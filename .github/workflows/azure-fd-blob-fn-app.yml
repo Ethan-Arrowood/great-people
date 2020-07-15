@@ -1,6 +1,7 @@
 name: Azure Static Site with FD, Fn, and Blob CI/CD
 
 on:
+  
   push:
     branches:
       - master
@@ -104,3 +105,4 @@ jobs:
           uses: Azure/CLI
           with:
             inlineScript: az storage blob upload-batch --account-name ${{ env.AZURE_STORAGE_NAME }} -s ./build -d '$web'
+
