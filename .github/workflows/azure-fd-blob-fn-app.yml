@@ -102,6 +102,5 @@ jobs:
 
         - name: Deploy Static Site Content
           uses: Azure/CLI
-          run: |
-            az storage blob upload-batch --account-name ${{ env.AZURE_STORAGE_NAME }} -s ./build -d '$web'
-
+          with:
+            inlineScript: az storage blob upload-batch --account-name ${{ env.AZURE_STORAGE_NAME }} -s ./build -d '$web'
