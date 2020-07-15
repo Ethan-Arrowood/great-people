@@ -1,4 +1,4 @@
-name: Azure Static Site with FD, Fn, and Blob CI/CD
+name: Azure Static Blob and Function CI/CD
 
 on:
   workflow_dispatch:
@@ -105,4 +105,3 @@ jobs:
           uses: Azure/CLI
           with:
             inlineScript: az storage blob upload-batch --account-name ${{ env.AZURE_STORAGE_NAME }} -s ./build -d '$web'
-
