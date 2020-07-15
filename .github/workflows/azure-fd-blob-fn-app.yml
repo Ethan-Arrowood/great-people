@@ -99,7 +99,7 @@ jobs:
         - name: Deploy Azure Function
           uses: Azure/functions-action@v1
           with:
-            app-name: ${{ secret.AZURE_FUNCTIONAPP_NAME }}
+            app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
             package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
         - name: Deploy Static Site Content
