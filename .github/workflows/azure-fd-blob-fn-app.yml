@@ -23,14 +23,14 @@ jobs:
       name: Build and Deploy Job
       steps:
         - name: Azure Login
-          uses: azure/login@v1
+          uses: azure/login@v1.1
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
 
         - name: Checkout Source
           uses: actions/checkout@v2
-            with:
-              submodules: true
+          with:
+            submodules: true
 
         - name: Lint Code
           uses: docker://github/super-linter:v3
