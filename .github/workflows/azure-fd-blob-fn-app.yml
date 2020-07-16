@@ -24,11 +24,6 @@ jobs:
       runs-on: ubuntu-latest
       name: Build and Deploy Job
       steps:
-        - name: Azure Login
-          uses: azure/login@v1.1
-          with:
-            creds: ${{ secrets.AZURE_CREDENTIALS }}
-
         - name: Checkout Source
           uses: actions/checkout@v2
           with:
@@ -76,6 +71,11 @@ jobs:
             pushd './${{ env.TF_PATH }}'
             terraform fmt -check
             popd
+
+        - name: Azure Login
+          uses: azure/login@v1.1
+          with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
 
         - name: Terraform Plan
           run: |
