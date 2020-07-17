@@ -1,5 +1,7 @@
+/* eslint-disable no-unused-vars */
 import { AzureFunction, Context, HttpRequest } from '@azure/functions'
 import { UserInfo } from '../models/UserInfo'
+/* eslint-enable no-unused-vars */
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
   const userId = req.params.userId
