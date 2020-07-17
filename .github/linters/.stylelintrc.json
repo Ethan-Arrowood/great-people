@@ -1,6 +1,6 @@
 {
   "extends": "stylelint-config-standard",
   "ignoreFiles": [
-    "src/mvp.css"
+    "**/mvp.css"
   ]
 }
