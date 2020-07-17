@@ -12,8 +12,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     context.res = {
       body: `Saved profile for ${userInfo.userId}`
     }
-  }
-  else {
+  } else {
     context.res = {
       status: 400,
       body: 'Invalid user info'

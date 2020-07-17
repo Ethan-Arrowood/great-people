@@ -12,8 +12,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     context.res = {
       body: userInfo
     }
-  }
-  else {
+  } else {
     context.res = {
       status: 400,
       body: 'Oops I didn\'t catch your userId'
