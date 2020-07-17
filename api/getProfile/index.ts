@@ -10,7 +10,6 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
   context.log.info(`getProfile called for ${userId}`)
   if (userId && userInfo) {
     context.res = {
-      // status: 200, /* Defaults to 200 */
       body: userInfo
     }
   }
