@@ -1,13 +1,29 @@
-const httpFunction = require('./index')
-const context = require('../testing/defaultContext')
+import httpTrigger from '.'
+import { UserInfo } from '../models/UserInfo'
+import { Context, HttpRequest } from '@azure/functions' 
+import { Substitute } from '@fluffy-spoon/substitute'
 
 test('Http trigger should return known text', async () => {
   const request = {
-    params: { userId: 'bill' }
-  }
+    method: 'GET',
+    url: '',
+    headers: {},
+    query: {},
+    params: { userId: 'pete' }
+  } as HttpRequest
 
-  await httpFunction(context, request)
+  const user = {
+    userId: 'pete',
+    aboutMe: 'about',
+    interests: 'interests',
+    skills: 'skills'
+  } as UserInfo
 
-  expect(context.log.mock.calls.length).toBe(1)
-  expect(context.res.body).toEqual('Hello Bill')
+  const context = Substitute.for<Context>() as Context
+  (context.req as any).returns({ req: request });
+  (context.bindings as any).returns({ userInfo: user });
+
+  const response = await httpTrigger(context, request)
+
+  expect(response.status as UserInfo).toBe(200)
 })

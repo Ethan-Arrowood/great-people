@@ -2,6 +2,23 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug API",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/api/node_modules/jest/bin/jest",
+            "args": [
+                "-i"
+                "--config"
+                "jest.config.js"
+            ],
+            "internalConsoleOptions": "openOnSessionStart",
+            "console": "integratedTerminal",
+            "outFiles": [
+                "${workspaceRoot}/api/build/dist/**/*"
+            ],
+            "cwd": "${workspaceFolder}/api"
+        },
+        {
             "name": "Attach to Functions",
             "type": "node",
             "request": "attach",
