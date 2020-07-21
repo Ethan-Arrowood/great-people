@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import httpTrigger from '.'
 import { UserInfo } from '../models/UserInfo'
-import { Context, HttpRequest, Logger } from '@azure/functions' 
+import { Context, HttpRequest, Logger } from '@azure/functions'
+/* eslint-enable no-unused-vars */
 
 test('Http trigger should return known text', async () => {
   const user = {
@@ -23,26 +25,26 @@ test('Http trigger should return known text', async () => {
 
   const context = {
     req: request,
-    bindings: { userInfo: user},
+    bindings: { userInfo: user },
     invocationId: '',
     log: {
-        error: () => {},
-        info: () => {},
-        verbose: () => {},
-        warn: () => {}
+      error: () => { },
+      info: () => { },
+      verbose: () => { },
+      warn: () => { }
     } as Logger,
-    done: () => {},
+    done: () => { },
     executionContext: {
-        invocationId: '',
-        functionName: '',
-        functionDirectory: ''
+      invocationId: '',
+      functionName: '',
+      functionDirectory: ''
     },
     bindingData: {},
     bindingDefinitions: [],
     traceContext: {
-        attributes: {},
-        traceparent: null,
-        tracestate: null
+      attributes: {},
+      traceparent: null,
+      tracestate: null
     }
   } as Context
 

@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 import httpTrigger from '.'
 import { UserInfo } from '../models/UserInfo'
 import { Context, HttpRequest, Logger } from '@azure/functions'
-import { Substitute } from '@fluffy-spoon/substitute'
+/* eslint-enable no-unused-vars */
 
 test('Http trigger should return known text', async () => {
   const request = {
