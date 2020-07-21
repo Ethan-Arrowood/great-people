@@ -10,6 +10,7 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     context.bindings.userInfo = userInfo
 
     return {
+      status: 200,
       body: `Saved profile for ${userInfo.userId}`
     }
   } else {

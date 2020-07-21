@@ -1,6 +1,6 @@
 import httpTrigger from '.'
 import { UserInfo } from '../models/UserInfo'
-import { Context, HttpRequest } from '@azure/functions' 
+import { Context, HttpRequest, Logger } from '@azure/functions'
 import { Substitute } from '@fluffy-spoon/substitute'
 
 test('Http trigger should return known text', async () => {
@@ -19,9 +19,30 @@ test('Http trigger should return known text', async () => {
     skills: 'skills'
   } as UserInfo
 
-  const context = Substitute.for<Context>() as Context
-  (context.req as any).returns({ req: request });
-  (context.bindings as any).returns({ userInfo: user });
+  const context = {
+    req: request,
+    bindings: { userInfo: user },
+    invocationId: '',
+    log: {
+      error: () => { },
+      info: () => { },
+      verbose: () => { },
+      warn: () => { }
+    } as Logger,
+    done: () => { },
+    executionContext: {
+      invocationId: '',
+      functionName: '',
+      functionDirectory: ''
+    },
+    bindingData: {},
+    bindingDefinitions: [],
+    traceContext: {
+      attributes: {},
+      traceparent: null,
+      tracestate: null
+    }
+  } as Context
 
   const response = await httpTrigger(context, request)
 
