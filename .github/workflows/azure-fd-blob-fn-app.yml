@@ -12,107 +12,117 @@ on:
       - master
 
 env:
-  NODE_VERSION: '12.x'                     # set this to the node version to use (supports 8.x, 10.x, 12.x)
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: './api'      # set this to the path to your web app project, defaults to the repository root
-  AZURE_REACT_PACKAGE_PATH: './src'      # set this to the path to your web app project, defaults to the repository root
-  TF_PATH: './deploy'      # set this to the path to your web app project, defaults to the repository root
-  ENVIRONMENT: ''
+  NODE_VERSION: "12.x" # set this to the node version to use (supports 8.x, 10.x, 12.x)
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "./api" # set this to the path to your web app project, defaults to the repository root
+  AZURE_REACT_PACKAGE_PATH: "./src" # set this to the path to your web app project, defaults to the repository root
+  TF_PATH: "./deploy" # set this to the path to your web app project, defaults to the repository root
+  ENVIRONMENT: ""
 
 jobs:
   build_and_deploy_job:
-      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
-      runs-on: ubuntu-latest
-      name: Build and Deploy Job
-      steps:
-        - name: Checkout Source
-          uses: actions/checkout@v2
-          with:
-            submodules: true
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v2
+        with:
+          submodules: true
 
-        - name: Lint Code
-          uses: docker://github/super-linter:v3
-          env:
-            VALIDATE_ALL_CODEBASE: true
-            VALIDATE_CSS: false
-            VALIDATE_YAML: true
-            VALIDATE_JSON: true
-            VALIDATE_MD: true
-            VALIDATE_TSX: true
-            VALIDATE_TYPESCRIPT_ES: true
-            VALIDATE_TYPESCRIPT_STANDARD: true
-            VALIDATE_TERRAFORM: true
-            VALIDATE_HTML: true
-            LINTER_RULES_PATH: .github/linters
+      - name: Lint Code
+        uses: docker://github/super-linter:v3
+        env:
+          VALIDATE_ALL_CODEBASE: true
+          VALIDATE_CSS: false
+          VALIDATE_YAML: true
+          VALIDATE_JSON: true
+          VALIDATE_MD: true
+          VALIDATE_TSX: true
+          VALIDATE_TYPESCRIPT_ES: true
+          VALIDATE_TYPESCRIPT_STANDARD: true
+          VALIDATE_TERRAFORM: true
+          VALIDATE_HTML: true
+          LINTER_RULES_PATH: .github/linters
 
-        - name: Setup Node ${{ env.NODE_VERSION }} Environment
-          uses: actions/setup-node@v1
-          with:
-            node-version: ${{ env.NODE_VERSION }}
+      - name: Setup Node ${{ env.NODE_VERSION }} Environment
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
-        - name: Build and Test React App
-          shell: bash
-          run: |
-            pushd './${{ env.AZURE_REACT_PACKAGE_PATH }}'
-            npm install
-            npm run build --if-present
-            npm run test --if-present
-            popd
+      - name: Build and Test React App
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_REACT_PACKAGE_PATH }}'
+          npm install
+          npm run build --if-present
+          npm run test --if-present
+          popd
 
-        - name: Build and Test Function App
-          shell: bash
-          run: |
-            pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-            npm install
-            npm run build --if-present
-            npm run test --if-present
-            popd
+      - name: Build and Test Function App
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          npm install
+          npm run build --if-present
+          npm run test --if-present
+          popd
 
-        - name: Setup Terraform
-          uses: hashicorp/setup-terraform@v1
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
 
-        - name: Terraform Init
-          run: |
-            pushd './${{ env.TF_PATH }}'
-            terraform init
-            popd
+      - name: Terraform Init
+        run: |
+          pushd './${{ env.TF_PATH }}'
+          terraform init
+          popd
 
-        - name: Terraform Format
-          run: |
-            pushd './${{ env.TF_PATH }}'
-            terraform fmt -check
-            popd
+      - name: Terraform Format
+        run: |
+          pushd './${{ env.TF_PATH }}'
+          terraform fmt -check
+          popd
 
-        - name: Azure Login
-          uses: azure/login@v1.1
-          with:
-            creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Azure Login
+        uses: azure/login@v1.1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-        - name: Terraform Plan
-          run: |
-            pushd './${{ env.TF_PATH }}'
-            terraform plan \
-            -var="app_name=${{ secrets.app_name }}" \
-            -var="location=${{ secrets.location }}" \
-            -var="environment=${{ env.GITHUB_RUN_ID }}"
-            popd
+      - name: Terraform Plan
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+        run: |
+          pushd './${{ env.TF_PATH }}'
+          terraform plan \
+          -var="app_name=${{ secrets.app_name }}" \
+          -var="location=${{ secrets.location }}" \
+          -var="environment=${{ env.GITHUB_RUN_ID }}"
+          popd
 
-        - name: Terraform Apply
-          if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-          run: |
-            pushd './${{ env.TF_PATH }}'
-            terraform apply -auto-approve \
-            -var="app_name=${{ secrets.app_name }}" \
-            -var="location=${{ secrets.location }}" \
-            -var="environment=${{ env.GITHUB_RUN_ID }}"
-            popd
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+        run: |
+          pushd './${{ env.TF_PATH }}'
+          terraform apply -auto-approve \
+          -var="app_name=${{ secrets.app_name }}" \
+          -var="location=${{ secrets.location }}" \
+          -var="environment=${{ env.GITHUB_RUN_ID }}"
+          popd
 
-        - name: Deploy Azure Function
-          uses: Azure/functions-action@v1
-          with:
-            app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
-            package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+      - name: Deploy Azure Function
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
-        - name: Deploy Static Site Content
-          uses: Azure/CLI@v1
-          with:
-            inlineScript: az storage blob upload-batch --account-name ${{ env.AZURE_STORAGE_NAME }} -s ./build -d '$web'
+      - name: Deploy Static Site Content
+        uses: Azure/CLI@v1
+        with:
+          inlineScript: az storage blob upload-batch --account-name ${{ env.AZURE_STORAGE_NAME }} -s ./build -d '$web'
