@@ -57,9 +57,19 @@ resource "azurerm_storage_account" "static_site" {
   }
 }
 
-resource "azurerm_storage_container" "static_site" {
+resource "azurerm_storage_account" "profiles" {
+  name                = "${local.prefix}profilessa"
+  resource_group_name = azurerm_resource_group.static_site.name
+
+  location                 = var.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+  account_kind             = "StorageV2"
+}
+
+resource "azurerm_storage_container" "profiles" {
   name                  = "profiles"
-  storage_account_name  = azurerm_storage_account.static_site.name
+  storage_account_name  = azurerm_storage_account.profiles.name
   container_access_type = "private"
 }
 
@@ -90,6 +100,7 @@ resource "azurerm_function_app" "static_site" {
     WEBSITE_NODE_DEFAULT_VERSION   = "~12"
     APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.static_site.instrumentation_key
     WEBSITE_RUN_FROM_PACKAGE       = "1"
+    PROFILES_STORAGE_CONNECTION    = azurerm_storage_account.profiles.primary_connection_string
   }
 
   site_config {
