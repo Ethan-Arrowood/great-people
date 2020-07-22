@@ -113,13 +113,13 @@ jobs:
           terraform apply -auto-approve \
           -var="app_name=${{ secrets.APP_NAME }}" \
           -var="location=${{ secrets.LOCATION }}" \
-          -var="environment=${{ env.GITHUB_RUN_ID }}"
+          -var="environment=${{ github.run_id	 }}"
           popd
 
       - name: Deploy Azure Function
         uses: Azure/functions-action@v1
         with:
-          app-name: ${{ secrets.APP_NAME }}${{ env.GITHUB_RUN_ID }}"
+          app-name: ${{ secrets.APP_NAME }}${{ github.run_id }}"
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
       - name: Deploy Static Site Content
