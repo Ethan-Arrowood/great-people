@@ -68,7 +68,6 @@ resource "azurerm_app_service_plan" "static_site" {
   location            = var.location
   resource_group_name = azurerm_resource_group.static_site.name
   kind                = "FunctionApp"
-  reserved            = true
 
   sku {
     tier = "Dynamic"
