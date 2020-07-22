@@ -96,8 +96,8 @@ jobs:
         run: |
           pushd './${{ env.TF_PATH }}'
           terraform plan \
-          -var="app_name=${{ secrets.app_name }}" \
-          -var="location=${{ secrets.location }}" \
+          -var="app_name=${{ secrets.APP_NAME }}" \
+          -var="location=${{ secrets.LOCATION }}" \
           -var="environment=${{ env.GITHUB_RUN_ID }}"
           popd
 
@@ -111,15 +111,15 @@ jobs:
         run: |
           pushd './${{ env.TF_PATH }}'
           terraform apply -auto-approve \
-          -var="app_name=${{ secrets.app_name }}" \
-          -var="location=${{ secrets.location }}" \
+          -var="app_name=${{ secrets.APP_NAME }}" \
+          -var="location=${{ secrets.LOCATION }}" \
           -var="environment=${{ env.GITHUB_RUN_ID }}"
           popd
 
       - name: Deploy Azure Function
         uses: Azure/functions-action@v1
         with:
-          app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
+          app-name: ${{ secrets.APP_NAME }}${{ env.GITHUB_RUN_ID }}"
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
       - name: Deploy Static Site Content
