@@ -77,7 +77,7 @@ resource "azurerm_app_service_plan" "static_site" {
   name                = "${local.prefix}-app-service-plan"
   location            = var.location
   resource_group_name = azurerm_resource_group.static_site.name
-and  kind                = "Linux"
+  kind                = "Linux"
   reserved            = true
 
   sku {
