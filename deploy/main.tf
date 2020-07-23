@@ -148,7 +148,7 @@ resource "azurerm_frontdoor" "static_site" {
   routing_rule {
     name               = "http-redirect"
     accepted_protocols = ["Http"]
-    patterns_to_match  = ["/api/*"]
+    patterns_to_match  = ["/*"]
     frontend_endpoints = ["${local.prefix}-frontend"]
     redirect_configuration {
       redirect_protocol = "HttpsOnly"
