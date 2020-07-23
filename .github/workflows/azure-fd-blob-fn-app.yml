@@ -116,11 +116,11 @@ jobs:
           -var="environment=${{ github.run_id	 }}"
           popd
 
-      - name: Deploy Azure Function
-        uses: Azure/functions-action@v1
-        with:
-          app-name: "${{ secrets.APP_NAME }}${{ github.run_id }}-function-app"
-          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+      # - name: Deploy Azure Function
+      #   uses: Azure/functions-action@v1
+      #   with:
+      #     app-name: "${{ secrets.APP_NAME }}${{ github.run_id }}-function-app"
+      #     package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
       - name: Deploy Static Site Content
         uses: Azure/CLI@v1
