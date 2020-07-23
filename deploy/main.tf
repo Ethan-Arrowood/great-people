@@ -104,7 +104,7 @@ resource "azurerm_function_app" "static_site" {
     FUNCTIONS_WORKER_RUNTIME       = "node"
     WEBSITE_NODE_DEFAULT_VERSION   = "~12"
     APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.static_site.instrumentation_key
-    WEBSITE_RUN_FROM_PACKAGE       = "1"
+    FUNCTIONS_EXTENSION_VERSION    = "~3"
     PROFILES_STORAGE_CONNECTION    = azurerm_storage_account.profiles.primary_connection_string
   }
 
