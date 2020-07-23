@@ -125,23 +125,34 @@ resource "azurerm_frontdoor" "static_site" {
 
   routing_rule {
     name               = "static-content"
-    accepted_protocols = ["Http", "Https"]
+    accepted_protocols = ["Https"]
     patterns_to_match  = ["/*"]
     frontend_endpoints = ["${local.prefix}-frontend"]
     forwarding_configuration {
-      forwarding_protocol = "MatchRequest"
+      forwarding_protocol = "HttpsOnly"
       backend_pool_name   = "blob"
     }
   }
 
   routing_rule {
     name               = "api"
-    accepted_protocols = ["Http", "Https"]
+    accepted_protocols = ["Https"]
     patterns_to_match  = ["/api/*"]
     frontend_endpoints = ["${local.prefix}-frontend"]
     forwarding_configuration {
-      forwarding_protocol = "MatchRequest"
+      forwarding_protocol = "HttpsOnly"
       backend_pool_name   = "function"
+    }
+  }
+
+  routing_rule {
+    name               = "http-redirect"
+    accepted_protocols = ["Http"]
+    patterns_to_match  = ["/api/*"]
+    frontend_endpoints = ["${local.prefix}-frontend"]
+    redirect_configuration {
+      redirect_protocol = "HttpsOnly"
+      redirect_type     = "PermanentRedirect"
     }
   }
 
@@ -150,7 +161,8 @@ resource "azurerm_frontdoor" "static_site" {
   }
 
   backend_pool_health_probe {
-    name = "${local.prefix}-health-probe"
+    name     = "${local.prefix}-health-probe"
+    protocol = "https"
   }
 
   backend_pool {
