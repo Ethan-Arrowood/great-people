@@ -162,7 +162,7 @@ resource "azurerm_frontdoor" "static_site" {
 
   backend_pool_health_probe {
     name     = "${local.prefix}-health-probe"
-    protocol = "https"
+    protocol = "Https"
   }
 
   backend_pool {
