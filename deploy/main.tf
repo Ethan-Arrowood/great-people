@@ -23,7 +23,7 @@ resource "azurerm_resource_group" "static_site" {
   name     = local.prefix
   location = var.location
   tags = {
-    CreatorEmail = "pete@me.me"
+    CreatorEmail = ""
   }
 }
 
@@ -58,7 +58,7 @@ resource "azurerm_storage_account" "static_site" {
 }
 
 resource "azurerm_storage_account" "profiles" {
-  name                = "${local.prefix}profilessa"
+  name                = "${local.prefix}profssa"
   resource_group_name = azurerm_resource_group.static_site.name
 
   location                 = var.location
