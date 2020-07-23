@@ -77,11 +77,16 @@ resource "azurerm_app_service_plan" "static_site" {
   name                = "${local.prefix}-app-service-plan"
   location            = var.location
   resource_group_name = azurerm_resource_group.static_site.name
-  kind                = "FunctionApp"
+and  kind                = "Linux"
+  reserved            = true
 
   sku {
     tier = "Dynamic"
     size = "Y1"
+  }
+
+  lifecycle {
+    ignore_changes = [kind]
   }
 }
 
