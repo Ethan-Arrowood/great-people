@@ -12,7 +12,6 @@
   "dependencies": {},
   "devDependencies": {
     "@azure/functions": "^1.2.2",
-    "@fluffy-spoon/substitute": "^1.145.0",
     "@types/jest": "^26.0.3",
     "jest": "^26.1.0",
     "ts-jest": "^26.1.1",
