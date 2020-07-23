@@ -96,6 +96,7 @@ resource "azurerm_function_app" "static_site" {
   resource_group_name       = azurerm_resource_group.static_site.name
   app_service_plan_id       = azurerm_app_service_plan.static_site.id
   storage_connection_string = azurerm_storage_account.static_site.primary_connection_string
+  version                   = "~3"
   os_type                   = "linux"
   https_only                = true
   enable_builtin_logging    = false
@@ -104,12 +105,12 @@ resource "azurerm_function_app" "static_site" {
     FUNCTIONS_WORKER_RUNTIME       = "node"
     WEBSITE_NODE_DEFAULT_VERSION   = "~12"
     APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.static_site.instrumentation_key
-    FUNCTIONS_EXTENSION_VERSION    = "~3"
     PROFILES_STORAGE_CONNECTION    = azurerm_storage_account.profiles.primary_connection_string
   }
 
   site_config {
-    ftps_state = "Disabled"
+    ftps_state    = "Disabled"
+    http2_enabled = true
   }
 
   identity {
