@@ -58,7 +58,7 @@ resource "azurerm_storage_account" "static_site" {
 }
 
 resource "azurerm_storage_account" "profiles" {
-  name                = "${local.prefix}profssa"
+  name                = "${local.prefix}psa"
   resource_group_name = azurerm_resource_group.static_site.name
 
   location                 = var.location
