@@ -23,7 +23,7 @@ resource "azurerm_resource_group" "static_site" {
   name     = local.prefix
   location = var.location
   tags = {
-    CreatorEmail = ""
+    CreatorEmail = "deleteme"
   }
 }
 
