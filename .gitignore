@@ -2,3 +2,6 @@
 node_modules
 build
 .env
+deploy/.terraform
+*.tfstate
+*.tfstate.backup

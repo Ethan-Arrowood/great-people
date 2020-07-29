@@ -6,16 +6,22 @@
 			"command": "host start",
 			"problemMatcher": "$func-watch",
 			"isBackground": true,
-			"dependsOn": "npm build",
+			"dependsOn":["API: npm install", "API: npm build"],
 			"options": {
 				"cwd": "${workspaceFolder}/api"
 			}
 		},
 		{
 			"type": "shell",
-			"label": "npm build",
+			"label": "App: npm run start",
+			"command": "npm run start",
+			"dependsOn": ["App: npm install"],
+			"problemMatcher": "$tsc"
+		},
+		{
+			"type": "shell",
+			"label": "API: npm build",
 			"command": "npm run build",
-			"dependsOn": "npm install",
 			"problemMatcher": "$tsc",
 			"options": {
 				"cwd": "${workspaceFolder}/api"
@@ -23,7 +29,7 @@
 		},
 		{
 			"type": "shell",
-			"label": "npm install",
+			"label": "API: npm install",
 			"command": "npm install",
 			"options": {
 				"cwd": "${workspaceFolder}/api"
@@ -31,13 +37,31 @@
 		},
 		{
 			"type": "shell",
-			"label": "npm prune",
+			"label": "API: npm prune",
 			"command": "npm prune --production",
 			"dependsOn": "npm build",
 			"problemMatcher": [],
 			"options": {
 				"cwd": "${workspaceFolder}/api"
 			}
+		},
+		{
+			"type": "shell",
+			"label": "App: npm build",
+			"command": "npm run build",
+			"problemMatcher": "$tsc"
+		},
+		{
+			"type": "shell",
+			"label": "App: npm install",
+			"command": "npm install"
+		},
+		{
+			"type": "shell",
+			"label": "App: npm prune",
+			"command": "npm prune --production",
+			"dependsOn": "npm build",
+			"problemMatcher": []
 		}
 	]
 }

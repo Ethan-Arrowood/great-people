@@ -1,11 +1,11 @@
 {
   "bindings": [
     {
+      "name": "req",
       "type": "httpTrigger",
       "authLevel": "anonymous",
       "direction": "in",
-      "name": "req",
-      "route": "profile/{userId}",
+      "route": "profile/{userId:alpha}",
       "methods": [
         "get"
       ]
@@ -18,7 +18,7 @@
       "direction": "in"
     },
     {
-      "name": "res",
+      "name": "$return",
       "type": "http",
       "direction": "out"
     }

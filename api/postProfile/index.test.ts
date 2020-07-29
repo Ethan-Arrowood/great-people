@@ -5,20 +5,23 @@ import { Context, HttpRequest, Logger } from '@azure/functions'
 /* eslint-enable no-unused-vars */
 
 test('Http trigger should return known text', async () => {
-  const request = {
-    method: 'GET',
-    url: '',
-    headers: {},
-    query: {},
-    params: { userId: 'pete' }
-  } as HttpRequest
-
   const user = {
     userId: 'pete',
     aboutMe: 'about',
     interests: 'interests',
     skills: 'skills'
   } as UserInfo
+
+  const request = {
+    method: 'POST',
+    url: '',
+    headers: {},
+    query: {},
+    body: user,
+    params: {
+      userId: user.userId
+    }
+  } as HttpRequest
 
   const context = {
     req: request,
@@ -47,5 +50,5 @@ test('Http trigger should return known text', async () => {
 
   const response = await httpTrigger(context, request)
 
-  expect(response.status as UserInfo).toBe(200)
+  expect(response.status).toBe(200)
 })
