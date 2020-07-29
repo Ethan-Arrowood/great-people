@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug API",
+            "name": "Test API",
             "type": "node",
             "request": "launch",
             "program": "${workspaceRoot}/api/node_modules/jest/bin/jest",
@@ -19,7 +19,7 @@
             "cwd": "${workspaceFolder}/api"
         },
         {
-            "name": "Attach to Functions",
+            "name": "Debug API",
             "type": "node",
             "request": "attach",
             "port": 9229,
@@ -27,9 +27,9 @@
             "cwd": "${workspaceFolder}/api"
         },
         {
-            "type": "chrome",
+            "name": "Launch Frontend in Edge",
+            "type": "edge",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
             "url": "http://localhost:3000",
             "preLaunchTask": "App: npm run start",
             "webRoot": "${workspaceFolder}/build"
@@ -38,7 +38,7 @@
     "compounds": [
         {
             "name": "Client and Server",
-            "configurations": ["Attach to Functions", "Launch Chrome against localhost"]
+            "configurations": ["Debug API", "Launch Frontend in Edge"]
         }
     ]
 }

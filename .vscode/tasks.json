@@ -15,7 +15,7 @@
 			"type": "shell",
 			"label": "App: npm run start",
 			"command": "npm run start",
-			"dependsOn": ["App: npm install", "App: npm build"],
+			"dependsOn": ["App: npm install"],
 			"problemMatcher": "$tsc"
 		},
 		{
