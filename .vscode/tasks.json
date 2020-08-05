@@ -16,7 +16,10 @@
 			"label": "App: npm run start",
 			"command": "npm run start",
 			"dependsOn": ["App: npm install"],
-			"problemMatcher": "$tsc"
+			"problemMatcher": "$tsc",
+			"options": {
+				"cwd": "${workspaceFolder}/client"
+			}
 		},
 		{
 			"type": "shell",
@@ -49,19 +52,28 @@
 			"type": "shell",
 			"label": "App: npm build",
 			"command": "npm run build",
-			"problemMatcher": "$tsc"
+			"problemMatcher": "$tsc",
+			"options": {
+				"cwd": "${workspaceFolder}/client"
+			}
 		},
 		{
 			"type": "shell",
 			"label": "App: npm install",
-			"command": "npm install"
+			"command": "npm install",
+			"options": {
+				"cwd": "${workspaceFolder}/client"
+			}
 		},
 		{
 			"type": "shell",
 			"label": "App: npm prune",
 			"command": "npm prune --production",
 			"dependsOn": "npm build",
-			"problemMatcher": []
+			"problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}/client"
+			}
 		}
 	]
 }

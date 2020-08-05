@@ -13,13 +13,13 @@ on:
 env:
   NODE_VERSION: "12.x" # set this to the node version to use (supports 8.x, 10.x, 12.x)
   AZURE_FUNCTIONAPP_PACKAGE_PATH: "./api" # set this to the path to your web app project, defaults to the repository root
-  AZURE_REACT_PACKAGE_PATH: "./src" # set this to the path to your web app project, defaults to the repository root
+  AZURE_REACT_PACKAGE_PATH: "./client" # set this to the path to your web app project, defaults to the repository root
   TF_PATH: "./deploy" # set this to the path to your web app project, defaults to the repository root
   ENVIRONMENT: ""
 
 jobs:
   build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
@@ -124,4 +124,5 @@ jobs:
       - name: Deploy Static Site Content
         uses: Azure/CLI@v1
         with:
-          inlineScript: az storage blob upload-batch --account-name ${{ secrets.APP_NAME }}${{ github.run_id }}sa -s ./build -d '$web'
+          azcliversion: 2.9.1
+          inlineScript: az storage blob upload-batch --account-name ${{ secrets.APP_NAME }}${{ github.run_id }}sa -s ./client/build -d '$web'
